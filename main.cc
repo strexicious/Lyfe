@@ -12,7 +12,7 @@ int main() {
         {false}
     };
 
-    cout << grid.get(3, 3) << " " << grid.get(2, 2) << endl;
+    cout << grid.get(4, 0) << " " << grid.get(2, 0) << endl;
 
     return 0;
 }

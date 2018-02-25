@@ -8,24 +8,31 @@ class Array2D {
 
 public:
     // TODO take an initializer list and initilize the "array" member
-    Array2D(std::initializer_list<std::array<T, M>> initial_values):
-        array(initial_values) { }
+    Array2D(const std::initializer_list<std::array<T, M>> &initial_values);
 
     // mutators
-    void set(T value, int i, int j);
+    void set(const T &value, int i, int j);
 
     // retrievers
     const T &get(int i, int j) const;
 };
 
-template<class T, int N, int M>
-void print_array2d(std::ostream &os, Array2D<T, N, M> array2d);
-
 
 // Implementaion
 
 template<class T, int N, int M>
-void Array2D<T, N, M>::set(T value, int i, int j) {
+Array2D<T, N, M>::Array2D(const std::initializer_list<std::array<T, M>> &initial_values) {
+    auto init_b = initial_values.begin(), init_e = initial_values.end();
+    for (auto &row : array) {
+        if (init_b != init_e) {
+            row = *init_b;
+            ++init_b;
+        } else break;
+    }        
+}
+
+template<class T, int N, int M>
+void Array2D<T, N, M>::set(const T &value, int i, int j) {
     array[i][j] = value;
 }
 
