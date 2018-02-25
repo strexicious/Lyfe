@@ -7,11 +7,15 @@ class Array2D {
     std::array<std::array<T, M>, N> array;
 
 public:
+    // TODO take an initializer list and initilize the "array" member
+    Array2D(std::initializer_list<std::array<T, M>> initial_values):
+        array(initial_values) { }
+
     // mutators
     void set(T value, int i, int j);
 
     // retrievers
-    T get(int i, int j) const;
+    const T &get(int i, int j) const;
 };
 
 template<class T, int N, int M>
@@ -26,6 +30,6 @@ void Array2D<T, N, M>::set(T value, int i, int j) {
 }
 
 template<class T, int N, int M>
-T Array2D<T, N, M>::get(int i, int j) const {
+const T &Array2D<T, N, M>::get(int i, int j) const {
     return array[i][j];
 }
