@@ -3,16 +3,39 @@
 
 using namespace std;
 
-int main() {
-    // TODO make it work
-    const GoL<10, 10>::Grid grid = {
-        {true},
-        {true},
-        {true},
-        {false}
-    };
+constexpr unsigned WIDTH = 10;
+constexpr unsigned HEIGHT = 10;
 
-    cout << grid.get(4, 0) << " " << grid.get(2, 0) << endl;
+int main() {
+    const GoL<HEIGHT, WIDTH>::Grid pattern = {{
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, true, false, false, false, false, false, false},
+        {false, false, false, true, false, false, false, false, false, false},
+        {false, false, false, true, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+        {false, false, false, false, false, false, false, false, false, false},
+    }};
+
+    GoL<HEIGHT, WIDTH> gol(pattern);
+
+    for (auto &row : gol.state()) {
+        for (auto cell : row)
+            cout << (cell ? 'O' : '-') << " ";
+        cout << '\n';
+    }
+
+    cout << "=========\n";
+
+    auto updated = gol.update();
+    for (auto &row : updated) {
+        for (auto cell : row)
+            cout << (cell ? 'O' : '-') << " ";
+        cout << '\n';
+    }
 
     return 0;
 }
