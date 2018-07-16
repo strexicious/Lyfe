@@ -1,2 +1,6 @@
 lyfe
 .vscode/
+/target
+**/*.rs.bk
+/.idea
+/Cargo.lock
