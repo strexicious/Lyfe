@@ -26,7 +26,7 @@ pub struct GoLGrid {
 }
 
 impl GoLGrid {
-    pub fn new(size: usize, alive_chance: f64) -> Self {
+    pub fn from_luck(size: usize, alive_chance: f64) -> Self {
         let rng = &mut rand::thread_rng();
         let dist = Bernoulli::new(alive_chance);
         let dist_iter = dist.sample_iter(rng);
@@ -91,5 +91,9 @@ impl GoLGrid {
 
     pub fn iter(&self) -> Iter<bool> {
         self.cur_buf.iter()
+    }
+
+    pub fn size(&self) -> usize {
+        self.size
     }
 }
