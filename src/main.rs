@@ -1,6 +1,6 @@
 use ggez::{Context, ContextBuilder, GameResult};
 use ggez::event::{self, EventHandler};
-use ggez::graphics::{self, Rect, Mesh, DrawMode, FillOptions};
+use ggez::graphics::{self, Rect, MeshBuilder, DrawMode, FillOptions};
 
 mod grid;
 
@@ -50,21 +50,24 @@ impl EventHandler for Lyfe {
         let mut cell_rect = Rect::zero();
         cell_rect.w = CELL_SIZE - 2.;
         cell_rect.h = CELL_SIZE - 2.;
+        let mut rect_mb = MeshBuilder::new();
 
         for (i, c) in self.grid.iter().enumerate() {
             let x = (i % self.grid.size()) as f32;
             let y = (i / self.grid.size()) as f32;
             
-            let rect_mesh = Mesh::new_rectangle(
-                ctx,
+            cell_rect.move_to([x*CELL_SIZE+1., y*CELL_SIZE+1.]);
+            
+            rect_mb.rectangle(
                 DrawMode::Fill(FillOptions::DEFAULT),
                 cell_rect,
                 if *c { graphics::WHITE } else { graphics::BLACK }
-            )?;
+            );
             
-            graphics::draw(ctx, &rect_mesh, ([x*CELL_SIZE+1., y*CELL_SIZE+1.],))?;
         }
 
+        let rect_mesh = rect_mb.build(ctx)?;
+        graphics::draw(ctx, &rect_mesh, ([0.,0.],))?;
         graphics::present(ctx)
     }
 }
