@@ -1,8 +1,10 @@
 use ggez::{Context, ContextBuilder, GameResult};
+use ggez::conf::{WindowSetup};
+use ggez::timer;
 use ggez::event::{self, EventHandler, KeyCode};
 use ggez::input::keyboard::{KeyMods};
 use ggez::input::mouse::{MouseButton};
-use ggez::graphics::{self, Rect, MeshBuilder, DrawMode, FillOptions};
+use ggez::graphics::{self, Rect, MeshBuilder, DrawMode, FillOptions, Text, Align};
 
 mod grid;
 
@@ -103,8 +105,24 @@ impl EventHandler for Lyfe {
             
         }
 
+        let fps_str = format!("FPS: {}", (timer::fps(ctx) as usize).to_string());
+        graphics::draw(ctx, &Text::new(fps_str), ([610., 10.], ))?;
+
+        let controls_str = concat!(
+            "S: Toggle simulation\n",
+            "R: Generate random grid\n",
+            "C: Clear grid\n",
+            "Esc: Quit"
+        );
+        graphics::draw(ctx, &Text::new(controls_str), ([610., 30.], ))?;
+
+        let mut cell_manip_text = Text::new("Click on the grid cells to toggle their states when simulation is not running");
+        cell_manip_text.set_bounds([200., std::f32::INFINITY], Align::Left);
+        graphics::draw(ctx, &cell_manip_text, ([610., 110.], ))?;
+        
         let rect_mesh = rect_mb.build(ctx)?;
         graphics::draw(ctx, &rect_mesh, ([0.,0.],))?;
+
         graphics::present(ctx)
     }
 
@@ -136,14 +154,18 @@ impl EventHandler for Lyfe {
             let row = (y / CELL_SIZE) as usize;
             let cell_idx = row * self.grid.size() + col;
 
-            self.grid_pattern[cell_idx] = !self.grid_pattern[cell_idx];
-            self.changed = true;
+            if col < self.grid.size() {
+                self.grid_pattern[cell_idx] = !self.grid_pattern[cell_idx];
+                self.changed = true;
+            }
         }
     }
 }
 
 fn main() -> GameResult {
-    let (mut ctx, mut event_loop) = ContextBuilder::new("lyfe", "strexicious").build()?;
+    let (mut ctx, mut event_loop) = ContextBuilder::new("lyfe", "strexicious")
+        .window_setup(WindowSetup::default().vsync(false))
+        .build()?;
     let mut my_game = Lyfe::new(&mut ctx, 60);
 
     match event::run(&mut ctx, &mut event_loop, &mut my_game) {
